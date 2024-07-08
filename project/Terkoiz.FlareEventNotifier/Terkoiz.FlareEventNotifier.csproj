@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Terkoiz</Authors>
     <RepositoryUrl>https://dev.sp-tarkov.com/Terkoiz/FlareEventNotifier</RepositoryUrl>
     <PackageLicenseExpression>NCSA</PackageLicenseExpression>
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <Reference Include="Aki.Reflection">
-      <HintPath>..\References\EFT_Managed\Aki.Reflection.dll</HintPath>
+      <HintPath>..\References\SPT\spt-reflection.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assembly-CSharp">

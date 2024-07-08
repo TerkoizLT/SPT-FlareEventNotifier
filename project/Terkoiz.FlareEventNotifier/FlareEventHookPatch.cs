@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using Aki.Reflection.Patching;
+using Comfort.Common;
+using SPT.Reflection.Patching;
 using EFT;
 using EFT.Communications;
 using EFT.PrefabSettings;
@@ -23,17 +24,25 @@ namespace Terkoiz.FlareEventNotifier
         }
 
         [PatchPrefix]
-        public static void PatchPrefix(FlareEventType flareType, EZoneEventTypeEnumClone eventType)
+        public static void PatchPrefix(FlareEventType flareType, EZoneEventTypeEnumClone eventType, string playerProfileID)
         {
             if (flareType != FlareEventType.ExitActivate)
             {
                 return;
             }
 
-            if (eventType == EZoneEventTypeEnumClone.FiredPlayerAddedInShotList || eventType == EZoneEventTypeEnumClone.PlayerByPartyAddedInShotList)
+            if (eventType != EZoneEventTypeEnumClone.FiredPlayerAddedInShotList && eventType != EZoneEventTypeEnumClone.PlayerByPartyAddedInShotList)
             {
-                NotificationManagerClass.DisplayNotification(new ExfilFlareSuccessNotification());
+                return;
             }
+
+            var localPlayer = GetLocalPlayerFromWorld();
+            if (localPlayer != null && localPlayer.ProfileId != playerProfileID)
+            {
+                return;
+            }
+
+            NotificationManagerClass.DisplayNotification(new ExfilFlareSuccessNotification());
         }
 
         /// <summary>
@@ -47,9 +56,24 @@ namespace Terkoiz.FlareEventNotifier
             FiredPlayerAddedInShotList,
             PlayerByPartyAddedInShotList
         }
+
+        /// <summary>
+        /// Gets the current <see cref="Player"/> instance if it's available
+        /// </summary>
+        /// <returns>Local <see cref="Player"/> instance; returns null if the game is not in raid</returns>
+        private static Player GetLocalPlayerFromWorld()
+        {
+            var gameWorld = Singleton<GameWorld>.Instance;
+            if (gameWorld == null || gameWorld.MainPlayer == null)
+            {
+                return null;
+            }
+
+            return gameWorld.MainPlayer;
+        }
     }
 
-    public class ExfilFlareSuccessNotification : NotificationClass
+    public class ExfilFlareSuccessNotification : NotificationAbstractClass
     {
         public ExfilFlareSuccessNotification()
         {
