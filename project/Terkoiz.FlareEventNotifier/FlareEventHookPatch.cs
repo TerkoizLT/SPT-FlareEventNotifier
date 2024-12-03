@@ -5,7 +5,7 @@ using Comfort.Common;
 using SPT.Reflection.Patching;
 using EFT;
 using EFT.Communications;
-using EFT.PrefabSettings;
+using EFT.InventoryLogic;
 using HarmonyLib;
 using UnityEngine;
 
